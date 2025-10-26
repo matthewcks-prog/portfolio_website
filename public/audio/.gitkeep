@@ -1,0 +1,6 @@
+# Add your ambient.mp3 file here
+# Requirements:
+# - Seamless loop (10-30 seconds)
+# - -12 to -16 LUFS loudness
+# - Format: MP3 (or OGG/AAC as fallbacks)
+# - File size: aim for < 500KB

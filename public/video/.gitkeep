@@ -1,0 +1,13 @@
+# Add your video files here:
+# 
+# Required files:
+# - immersive.mp4 (H.264, 1080p or 720p, 24-30fps, 3-5 Mbps bitrate, 5-12 seconds)
+# - poster.jpg (1920x1080 or 1280x720, < 200KB)
+#
+# Optional:
+# - immersive.webm (VP9 codec for better compression)
+#
+# Tips for optimization:
+# - Use HandBrake or FFmpeg for compression
+# - Keep duration short (5-12s) for smooth scrubbing
+# - Test on mobile devices
