@@ -5,7 +5,6 @@ import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import { cn } from "@/lib/utils";
 import Nav from "@/components/Nav";
 import { AudioProvider } from "@/providers/AudioProvider";
-import AudioToggle from "@/components/media/AudioToggle";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const space = Space_Grotesk({ subsets: ["latin"], variable: "--font-space" });
@@ -30,7 +29,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Nav />
           <main id="main">{children}</main>
           <footer className="px-6 py-10 text-sm text-muted">© {new Date().getFullYear()} Matthew.</footer>
-          <AudioToggle />
           <Analytics />
         </AudioProvider>
       </body>

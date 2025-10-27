@@ -48,7 +48,9 @@ export default function HeroVideo() {
           transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
           className="max-w-2xl"
         >
-          <h1 className="text-4xl font-semibold tracking-tight md:text-6xl">Building reliable, human-friendly software with AI-grade polish.</h1>
+          <h1 className="text-4xl font-semibold tracking-tight md:text-6xl">
+            Building reliable, human-friendly software with AI-grade polish.
+          </h1>
           <p className="mt-3 text-muted">Systems, performance, and delightful interactions — showcased with 3D and motion.</p>
           <div className="mt-6 flex gap-3">
             <a href="#projects" className="focus-ring rounded-xl bg-indigo/90 px-4 py-2 text-sm text-white hover:bg-indigo">
