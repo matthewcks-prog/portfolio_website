@@ -4,10 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:clean": "npm run kill-port && next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "kill-port": "powershell -ExecutionPolicy Bypass -File kill-port.ps1"
   },
   "dependencies": {
     "next": "^14.2.0",

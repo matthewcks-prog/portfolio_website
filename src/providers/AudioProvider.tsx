@@ -52,16 +52,22 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
     audio.loop = true;
     audio.preload = "auto";
     audio.crossOrigin = "anonymous";
-    // Start at 2 seconds to skip the first 2 seconds
-    audio.currentTime = 2;
+    audio.volume = 1.0; // Set audio element volume to max, we'll control via GainNode
 
-    // When the audio loops, restart at 2 seconds instead of 0
+    // When the audio loops, restart at 3 seconds instead of 0
     audio.addEventListener("timeupdate", () => {
-      if (audio.currentTime < 2) {
-        audio.currentTime = 2;
+      if (audio.currentTime > 0 && audio.currentTime < 3) {
+        audio.currentTime = 3;
       }
     });
 
+    // Add event listeners for debugging
+    audio.addEventListener("loadeddata", () => console.log("Audio loaded successfully"));
+    audio.addEventListener("error", (e) => console.error("Audio error:", e));
+    audio.addEventListener("play", () => console.log("Audio play event fired"));
+    audio.addEventListener("playing", () => console.log("Audio is now playing"));
+
+    console.log("Audio element created:", audio.src);
     audioRef.current = audio;
   }, []);
 
@@ -76,31 +82,62 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
         const ctx = new AC();
         const src = ctx.createMediaElementSource(audioRef.current!);
         const gain = ctx.createGain();
-        gain.gain.value = volume;
+        // Get current volume from localStorage or default
+        const currentVolume = Number(localStorage.getItem("volume") ?? 0.4);
+        gain.gain.value = currentVolume;
         src.connect(gain).connect(ctx.destination);
         ctxRef.current = ctx;
         gainRef.current = gain;
+
+        console.log("Audio context created with volume:", currentVolume, "setting ready to true");
         setReady(true);
+
+        // Remove all event listeners after audio context is created
+        events.forEach((event) => {
+          window.removeEventListener(event, onUserGesture);
+          document.removeEventListener(event, onUserGesture);
+        });
       }
-      // Always try to play on first gesture
-      try {
-        await audioRef.current!.play();
-      } catch {}
     };
 
     // Listen to multiple event types to catch ANY user interaction
-    const events = ["click", "pointerdown", "mousedown", "touchstart", "keydown", "scroll", "mousemove", "wheel"];
+    // Add listeners to both window and document to catch more events
+    const events = [
+      "click",
+      "mousedown",
+      "mouseup",
+      "mousemove",
+      "mouseover",
+      "mouseenter",
+      "pointerdown",
+      "pointerup",
+      "pointermove",
+      "pointerover",
+      "touchstart",
+      "touchmove",
+      "touchend",
+      "keydown",
+      "keyup",
+      "keypress",
+      "scroll",
+      "wheel",
+      "focus",
+      "focusin",
+    ];
+
     events.forEach((event) => {
-      window.addEventListener(event, onUserGesture, { once: true, passive: true });
+      window.addEventListener(event, onUserGesture, { once: true, passive: true, capture: true });
+      document.addEventListener(event, onUserGesture, { once: true, passive: true, capture: true });
     });
 
     return () => {
       events.forEach((event) => {
         window.removeEventListener(event, onUserGesture);
+        document.removeEventListener(event, onUserGesture);
       });
       audioRef.current?.pause();
     };
-  }, [ensureAudio, volume]);
+  }, [ensureAudio]);
 
   // Helper: ramp gain smoothly
   const rampGain = useCallback((target: number, time = 0.12) => {
@@ -121,20 +158,51 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
   const toggle = useCallback(() => setIsOn((v) => !v), []);
   const setOn = useCallback((v: boolean) => setIsOn(v), []);
 
+  // When audio context becomes ready, set initial volume
+  useEffect(() => {
+    if (!ready || !gainRef.current) return;
+    const gain = gainRef.current;
+    const ctx = ctxRef.current;
+    if (!ctx) return;
+
+    // Set initial volume immediately when ready
+    gain.gain.setValueAtTime(volume, ctx.currentTime);
+    console.log("Initial volume set to:", volume);
+  }, [ready, volume]);
+
   // Persist and play/pause with fade
   useEffect(() => {
     if (typeof window === "undefined") return;
-    // Don't persist sound state - always default to ON on page load
     const audio = audioRef.current;
-    if (!audio) return;
+    const gain = gainRef.current;
+
+    // Don't do anything until audio context is ready
+    if (!audio || !gain || !ready) {
+      console.log("Not ready yet:", { audio: !!audio, gain: !!gain, ready });
+      return;
+    }
+
+    console.log("Play/pause effect triggered:", { isOn, isPaused: audio.paused, currentTime: audio.currentTime });
 
     if (isOn) {
-      audio.play().catch(() => {});
-      rampGain(volume);
+      // Set start time to 3 seconds if not already playing and at beginning
+      if (audio.paused && audio.currentTime === 0) {
+        console.log("Setting audio start time to 3 seconds");
+        audio.currentTime = 3;
+      }
+
+      // Only call play if paused
+      if (audio.paused) {
+        console.log("Calling audio.play()");
+        audio.play().catch((e) => console.warn("Audio play failed:", e));
+      } else {
+        console.log("Audio already playing, not calling play again");
+      }
     } else {
       rampGain(0);
+      console.log("Audio muted");
     }
-  }, [isOn, volume, rampGain]);
+  }, [isOn, ready, rampGain]);
 
   // External volume setter (no restarting)
   const setVolume = useCallback(

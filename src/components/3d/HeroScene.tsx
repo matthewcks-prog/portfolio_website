@@ -55,7 +55,7 @@ export default function HeroScene() {
             {effects && (
               <EffectComposer multisampling={0}>
                 <Bloom intensity={0.25} luminanceThreshold={0.2} luminanceSmoothing={0.9} />
-                <ChromaticAberration offset={new Vector2(0.0006, 0.0006)} />
+                <ChromaticAberration offset={new Vector2(0.0006, 0.0006)} radialModulation={false} modulationOffset={0} />
               </EffectComposer>
             )}
           </Suspense>

@@ -95,7 +95,7 @@ export default function ContactPage() {
               {status === "loading" ? "Sending..." : "Send Message"}
             </Button>
 
-            {status === "success" && <p className="text-sm text-success">Message sent successfully! I'll get back to you soon.</p>}
+            {status === "success" && <p className="text-sm text-success">Message sent successfully! I&apos;ll get back to you soon.</p>}
             {status === "error" && <p className="text-sm text-error">Something went wrong. Please try again.</p>}
           </form>
         </GlassCard>

@@ -14,7 +14,7 @@ export default function AboutPage() {
       <motion.div {...fadeIn}>
         <h1 className="text-4xl font-semibold tracking-tight">About Me</h1>
         <p className="mt-4 text-lg text-muted">
-          I'm a software engineer focused on building reliable, performant systems with delightful user experiences.
+          I&apos;m a software engineer focused on building reliable, performant systems with delightful user experiences.
         </p>
       </motion.div>
 
@@ -26,8 +26,8 @@ export default function AboutPage() {
             require both technical depth and design sensibility.
           </p>
           <p className="mt-4 text-muted leading-relaxed">
-            I believe in writing code that's maintainable, accessible, and performant—treating every project as an opportunity to learn and
-            improve.
+            I believe in writing code that&apos;s maintainable, accessible, and performant—treating every project as an opportunity to learn
+            and improve.
           </p>
         </GlassCard>
       </motion.div>

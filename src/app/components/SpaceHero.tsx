@@ -216,8 +216,8 @@ export default function SpaceHero() {
       style={{
         position: "relative",
         width: "100%",
-        minHeight: "80vh",
-        background: "radial-gradient(ellipse at 20% 20%, rgba(40,40,60,0.6) 0%, rgba(0,0,0,1) 60%)",
+        minHeight: "100vh",
+        background: "transparent",
         color: "white",
         display: "flex",
         alignItems: "center",
