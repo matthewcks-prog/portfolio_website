@@ -1,9 +1,9 @@
 "use client";
 
-import HeroVideo from "@/components/media/HeroVideo";
 import ImmersiveVideoSection from "@/components/media/ImmersiveVideoSection";
 import GlassCard from "@/components/ui/GlassCard";
 import SpaceHero from "@/app/components/SpaceHero";
+import AboutMeTerminal from "@/components/sections/AboutMeTerminal";
 import { motion } from "framer-motion";
 
 export default function HomePage() {
@@ -11,23 +11,7 @@ export default function HomePage() {
 
   return (
     <>
-      <section id="home">
-        <HeroVideo />
-      </section>
-
-      <section id="about" className="mx-auto max-w-6xl px-6 py-16">
-        <motion.h2 {...fadeIn} className="mb-6 text-3xl font-semibold">
-          About Me
-        </motion.h2>
-        <motion.div {...fadeIn} transition={{ ...fadeIn.transition, delay: 0.1 }}>
-          <GlassCard className="p-8">
-            <p className="text-lg text-muted leading-relaxed">
-              I&apos;m a developer passionate about building elegant, performant applications. With expertise in modern web technologies, I
-              create experiences that are both beautiful and functional.
-            </p>
-          </GlassCard>
-        </motion.div>
-      </section>
+      <AboutMeTerminal />
 
       {/* Space Hero Section - 3D Earth & Astronaut with Warp Effect */}
       <section id="space-experience">

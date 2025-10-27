@@ -3,17 +3,17 @@
 @tailwind utilities;
 
 :root {
-  --bg: #0A0F1A;
+  --bg: #0a0f1a;
   --surface: rgba(255, 255, 255, 0.05);
-  --line: #1B2735;
-  --text: #E5E7EB;
-  --muted: #9CA3AF;
-  --c-cyan: #22D3EE;
-  --c-indigo: #6366F1;
-  --c-violet: #A78BFA;
-  --success: #34D399;
-  --warn: #F59E0B;
-  --error: #EF4444;
+  --line: #1b2735;
+  --text: #e5e7eb;
+  --muted: #9ca3af;
+  --c-cyan: #22d3ee;
+  --c-indigo: #6366f1;
+  --c-violet: #a78bfa;
+  --success: #34d399;
+  --warn: #f59e0b;
+  --error: #ef4444;
   --radius: 16px;
 }
 
@@ -85,4 +85,38 @@ pre {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* Terminal caret blink */
+@keyframes caret-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+.caret::after {
+  content: "▍";
+  display: inline-block;
+  margin-left: 0.12rem;
+  animation: caret-blink 1s steps(1, end) infinite;
+}
+
+/* Token marquee */
+@keyframes token-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.token-marquee {
+  animation: token-marquee var(--marquee-duration, 18s) linear infinite;
+}
+.token-marquee.paused {
+  animation-play-state: paused;
 }

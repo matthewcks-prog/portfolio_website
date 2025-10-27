@@ -5,6 +5,7 @@ import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import { cn } from "@/lib/utils";
 import Nav from "@/components/Nav";
 import { AudioProvider } from "@/providers/AudioProvider";
+import RippleCanvas from "@/components/effects/RippleCanvas";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const space = Space_Grotesk({ subsets: ["latin"], variable: "--font-space" });
@@ -30,6 +31,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <main id="main">{children}</main>
           <footer className="px-6 py-10 text-sm text-muted">© {new Date().getFullYear()} Matthew.</footer>
           <Analytics />
+          <RippleCanvas />
         </AudioProvider>
       </body>
     </html>
