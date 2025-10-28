@@ -15,6 +15,18 @@ const AstronautJump = dynamic(() => import("@/components/3d/AstronautJump"), {
   loading: () => null,
 });
 
+// Dynamic import for PassingClouds
+const PassingClouds = dynamic(() => import("@/components/effects/PassingClouds"), {
+  ssr: false,
+  loading: () => null,
+});
+
+// Dynamic import for TwinklingStars
+const TwinklingStars = dynamic(() => import("@/components/effects/TwinklingStars"), {
+  ssr: false,
+  loading: () => null,
+});
+
 const BIO =
   "Highly motivated student seeking to become a professional accredited software engineer. Passionate about Mathematics and the Sciences and eager to contribute to innovative solutions to global challenges in the field. Dedicated to learning through challenges.";
 
@@ -44,18 +56,24 @@ export default function AboutMeTerminal() {
   const [paused, setPaused] = useState(false);
 
   return (
-    <section id="about" className="relative w-full h-screen flex items-center justify-center overflow-hidden">
+    <section id="about" className="relative w-full min-h-screen flex items-center justify-center overflow-hidden py-12 md:py-16 lg:py-20">
       {/* Background Image - Full Width */}
       <div className="absolute inset-0 -z-10 w-full h-full">
         <Image src="/images/background_first.jpg" alt="Background" fill className="object-cover" priority />
       </div>
 
-      {/* Jumping Astronaut - Bottom Right Corner */}
+      {/* Twinkling Stars Effect */}
+      <TwinklingStars />
+
+      {/* Passing Clouds Effect */}
+      <PassingClouds />
+
+      {/* Jumping Astronaut - Bottom Right Corner (hidden on mobile) */}
       <AstronautJump />
 
       {/* Content Container */}
-      <div className="relative mx-auto max-w-7xl px-6 py-8">
-        <div className="grid items-center gap-8 lg:gap-10 lg:grid-cols-[minmax(0,380px),1fr]">
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <div className="grid items-center gap-6 sm:gap-8 lg:gap-10 lg:grid-cols-[minmax(0,380px),1fr]">
           {/* Portrait card */}
           <div className="relative group w-full max-w-[380px] mx-auto lg:mx-0">
             {/* Halo glow */}

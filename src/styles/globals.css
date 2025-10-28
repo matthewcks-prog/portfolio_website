@@ -15,6 +15,18 @@
   --warn: #f59e0b;
   --error: #ef4444;
   --radius: 16px;
+
+  /* Ripple palette */
+  --ripple-base: #fcfbf9;
+  --ripple-blue-1: #e7f8ff;
+  --ripple-blue-2: #e5edff;
+  --ripple-periwinkle-1: #e6e9fc;
+  --ripple-periwinkle-2: #e4e3f7;
+  --ripple-blush: #f9eaea;
+  --ripple-rose: #f3e6ec;
+  --ripple-peach: #f5ecf0;
+  --ripple-accent: #d7defd;
+  --ripple-mauve: #eee1eb;
 }
 
 html {
