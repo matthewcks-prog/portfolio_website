@@ -9,7 +9,8 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import dynamic from "next/dynamic";
 
-const MoonAstronaut = dynamic(() => import("@/components/3d/MoonAstronaut"), {
+// Dynamic import for AstronautJump (client-side only, no SSR)
+const AstronautJump = dynamic(() => import("@/components/3d/AstronautJump"), {
   ssr: false,
   loading: () => null,
 });
@@ -49,8 +50,8 @@ export default function AboutMeTerminal() {
         <Image src="/images/background_first.jpg" alt="Background" fill className="object-cover" priority />
       </div>
 
-      {/* Moon Astronaut */}
-      <MoonAstronaut />
+      {/* Jumping Astronaut - Bottom Right Corner */}
+      <AstronautJump />
 
       {/* Content Container */}
       <div className="relative mx-auto max-w-7xl px-6 py-8">
