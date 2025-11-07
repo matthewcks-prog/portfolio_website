@@ -77,27 +77,51 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
     ensureAudio();
 
     const onUserGesture = async () => {
+      const audio = audioRef.current;
+      if (!audio) return;
+
+      // Create AudioContext + graph once
       if (!ctxRef.current) {
         const AC: typeof AudioContext = (window as any).AudioContext || (window as any).webkitAudioContext;
         const ctx = new AC();
-        const src = ctx.createMediaElementSource(audioRef.current!);
+        const src = ctx.createMediaElementSource(audio);
         const gain = ctx.createGain();
-        // Get current volume from localStorage or default
         const currentVolume = Number(localStorage.getItem("volume") ?? 0.4);
         gain.gain.value = currentVolume;
         src.connect(gain).connect(ctx.destination);
         ctxRef.current = ctx;
         gainRef.current = gain;
-
-        console.log("Audio context created with volume:", currentVolume, "setting ready to true");
         setReady(true);
-
-        // Remove all event listeners after audio context is created
-        events.forEach((event) => {
-          window.removeEventListener(event, onUserGesture);
-          document.removeEventListener(event, onUserGesture);
-        });
       }
+
+      // Resume context if suspended
+      if (ctxRef.current?.state === "suspended") {
+        try {
+          await ctxRef.current.resume();
+        } catch (e) {
+          console.warn("AudioContext resume failed:", e);
+        }
+      }
+
+      // Attempt to start playback during the gesture
+      try {
+        if (audio.currentTime === 0) {
+          audio.currentTime = 3;
+        }
+        if (audio.paused) {
+          await audio.play();
+        }
+      } catch (e) {
+        // If play fails (policy), keep listeners to try again on next gesture
+        console.warn("Audio play during gesture failed:", e);
+        return;
+      }
+
+      // Success: remove listeners once we have started or confirmed playback
+      events.forEach((event) => {
+        window.removeEventListener(event, onUserGesture);
+        document.removeEventListener(event, onUserGesture);
+      });
     };
 
     // Listen to multiple event types to catch ANY user interaction
@@ -130,14 +154,35 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
       document.addEventListener(event, onUserGesture, { once: true, passive: true, capture: true });
     });
 
+    // Lifecycle: attempt resume when tab becomes visible or page is shown (iOS)
+    const onVisibility = async () => {
+      const audio = audioRef.current;
+      const ctx = ctxRef.current;
+      if (!audio || !ctx) return;
+      try {
+        if (ctx.state === "suspended") await ctx.resume();
+        if (!audio.paused && audio.readyState >= 2) return;
+        if (isOn) {
+          if (audio.currentTime === 0) audio.currentTime = 3;
+          await audio.play().catch(() => {});
+        }
+      } catch (e) {
+        // noop
+      }
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+    window.addEventListener("pageshow", onVisibility);
+
     return () => {
       events.forEach((event) => {
         window.removeEventListener(event, onUserGesture);
         document.removeEventListener(event, onUserGesture);
       });
+      document.removeEventListener("visibilitychange", onVisibility);
+      window.removeEventListener("pageshow", onVisibility);
       audioRef.current?.pause();
     };
-  }, [ensureAudio]);
+  }, [ensureAudio, isOn]);
 
   // Helper: ramp gain smoothly
   const rampGain = useCallback((target: number, time = 0.12) => {
